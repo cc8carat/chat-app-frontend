@@ -1,0 +1,8 @@
+{
+  "name": "chat-app-frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react",
+  "id": "91fc6eaf"
+}
