@@ -10,14 +10,14 @@ const Signin: React.FC = () => {
           <IonCol>
             <h1>Connect with your community!</h1>
             <p>Log in to continue</p>
-            <form className='sign-form ion-padding'>
-              <IonItem className='form-input ion-margin-bottom'>
+            <form className='ion-padding'>
+              <IonItem className='ion-margin-bottom'>
                 <IonLabel className='sign-lable' position='floating'>
                   Email
                 </IonLabel>
                 <IonInput required={true} type='email'></IonInput>
               </IonItem>
-              <IonItem className='form-input ion-margin-bottom'>
+              <IonItem className='ion-margin-bottom'>
                 <IonLabel className='sign-lable' position='floating'>
                   Password
                 </IonLabel>
