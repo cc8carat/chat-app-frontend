@@ -14,10 +14,14 @@ const Signup: React.FC = () => {
           <div className='text-container'>
             <p className='ion-text-center'>Connect with your community!</p>
             <div className='ion-padding'>
-              <IonButton expand='block'>Sign Up</IonButton>
+              <IonButton expand='block' shape='round'>
+                Sign Up
+              </IonButton>
             </div>
             <div className='ion-padding'>
-              <IonButton expand='block'>Sign In</IonButton>
+              <IonButton expand='block' shape='round'>
+                Sign In
+              </IonButton>
             </div>
           </div>
         </div>

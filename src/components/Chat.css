@@ -1,0 +1,29 @@
+.message {
+  padding: 10px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+}
+
+.other-message {
+  background-color: var(--ion-color-secondary);
+  color: white;
+}
+
+.my-message {
+  background-color: var(--ion-color-tertiary);
+  color: white;
+}
+
+.time {
+  color: gainsboro;
+  font-size: small;
+}
+
+.message-textarea {
+  max-height: 5rem;
+}
+
+.message-btn {
+  --padding-start: 0.7rem;
+  --padding-end: 0.7rem;
+}
