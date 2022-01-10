@@ -1,0 +1,38 @@
+.no-scroll {
+  --overflow: hidden;
+}
+
+.sign {
+  --background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1)), url('../pictures/cover2.jpg') no-repeat center center / cover;
+}
+
+.sign-container {
+  height: 100vh;
+}
+
+.sign h1 {
+  font-family: sans-serif;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  margin-bottom: 1.8em;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.sign p {
+  font-size: 0.9rem;
+  color: #ced1e1;
+  margin-bottom: 0.4em;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.sign-lable {
+  font-size: 0.7rem;
+  font-weight: bolder;
+}
+
+.sign-link {
+  font-weight: 900;
+  color: whitesmoke;
+}

@@ -6,16 +6,23 @@ import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
 
-import Signup from './components/Signup';
-import Chat from './components/Chat';
+import Signup from './pages/Signup';
+import Chat from './pages/Chat';
+import Signin from './pages/Signin';
 
 setupIonicReact();
 
 const App: React.FC = () => {
   return (
     <IonApp>
-      <Signup />
-      {/* <Chat /> */}
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route path='/signup' component={Signup}></Route>
+          <Route path='/signin' component={Signin}></Route>
+          <Route path='/chat' component={Chat}></Route>
+          <Redirect exact from='/' to='/signin' />
+        </IonRouterOutlet>
+      </IonReactRouter>
     </IonApp>
   );
 };
