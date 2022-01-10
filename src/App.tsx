@@ -7,6 +7,7 @@ import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
 
 import Signup from './components/Signup';
+import Chat from './components/Chat';
 
 setupIonicReact();
 
@@ -14,6 +15,7 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <Signup />
+      {/* <Chat /> */}
     </IonApp>
   );
 };
