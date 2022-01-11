@@ -36,3 +36,13 @@
   font-weight: 900;
   color: whitesmoke;
 }
+
+.invalid-feedback {
+  color: red;
+}
+
+.invalid-feedback span {
+  font-size: 0.9rem;
+  font-weight: bolder;
+  margin-left: 0.5rem;
+}
