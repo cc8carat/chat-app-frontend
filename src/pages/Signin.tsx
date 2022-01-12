@@ -1,19 +1,19 @@
 import { IonButton, IonCol, IonContent, IonInput, IonItem, IonLabel, IonPage, IonRouterLink, IonRow, IonIcon } from '@ionic/react';
 import { useForm, Controller } from 'react-hook-form';
 import { alertCircleOutline } from 'ionicons/icons';
+import { useAuth, SignInForm } from '../context/AuthContext';
 
 import './Sign.css';
 
-interface SignInForm {
-  email: string;
-  password: string;
-}
-
 const Signin: React.FC = () => {
+  const { signin } = useAuth();
+
   const {
     control,
+    reset,
+    clearErrors,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
   } = useForm({
     defaultValues: {
       email: '',
@@ -22,8 +22,9 @@ const Signin: React.FC = () => {
   });
 
   const onSubmit = (formData: SignInForm) => {
-    console.log(formData);
-    console.log(errors.email);
+    signin(formData);
+    reset();
+    clearErrors('email');
   };
 
   return (
@@ -41,11 +42,11 @@ const Signin: React.FC = () => {
                 <Controller
                   control={control}
                   name='email'
-                  render={({ field: { onChange, onBlur, value, ref } }) => <IonInput type='email' onIonChange={onChange} />}
+                  render={({ field: { onChange, onBlur, value, ref } }) => <IonInput type='email' onIonChange={onChange} value={value} />}
                   rules={{ required: true }}
                 />
               </IonItem>
-              {errors.email && (
+              {errors.email && isSubmitSuccessful === false && (
                 <IonRow className='invalid-feedback ion-align-items-center ion-padding-bottom'>
                   <IonIcon icon={alertCircleOutline} />
                   <span>Email is required</span>
@@ -58,11 +59,11 @@ const Signin: React.FC = () => {
                 <Controller
                   control={control}
                   name='password'
-                  render={({ field: { onChange, onBlur, value, ref } }) => <IonInput type='password' onIonChange={onChange} />}
+                  render={({ field: { onChange, value } }) => <IonInput type='password' onIonChange={onChange} value={value} />}
                   rules={{ required: true }}
                 />
               </IonItem>
-              {errors.password && (
+              {errors.password && isSubmitSuccessful === false && (
                 <IonRow className='invalid-feedback ion-align-items-center ion-padding-bottom'>
                   <IonIcon icon={alertCircleOutline} />
                   <span>Password is required.</span>
