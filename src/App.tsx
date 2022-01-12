@@ -2,26 +2,33 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { ellipse, square, triangle } from 'ionicons/icons';
-import Tab1 from './pages/Tab1';
+
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
 
 import Signup from './pages/Signup';
 import Chat from './pages/Chat';
 import Signin from './pages/Signin';
+import Map from './pages/Map';
+import AuthState from './context/AuthContext';
+import { useAuth } from './context/AuthContext';
 
 setupIonicReact();
 
 const App: React.FC = () => {
+  const { isAuthenticated } = useAuth();
   return (
     <IonApp>
       <IonReactRouter>
-        <IonRouterOutlet>
-          <Route path='/signup' component={Signup}></Route>
-          <Route path='/signin' component={Signin}></Route>
-          <Route path='/chat' component={Chat}></Route>
-          <Redirect exact from='/' to='/signin' />
-        </IonRouterOutlet>
+        <AuthState>
+          <IonRouterOutlet>
+            <Route path='/signup' component={Signup}></Route>
+            <Route path='/signin' component={Signin}></Route>
+            <Route path='/chat' component={Chat}></Route>
+            <Route path='/location'>{isAuthenticated ? <Map /> : <Redirect to='/signin' />}</Route>
+            <Redirect exact from='/' to='/signin' />
+          </IonRouterOutlet>
+        </AuthState>
       </IonReactRouter>
     </IonApp>
   );
