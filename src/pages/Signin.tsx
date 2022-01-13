@@ -2,16 +2,16 @@ import { IonButton, IonCol, IonContent, IonInput, IonItem, IonLabel, IonPage, Io
 import { useForm, Controller } from 'react-hook-form';
 import { alertCircleOutline } from 'ionicons/icons';
 import { useAuth, SignInForm } from '../context/AuthContext';
+import { Redirect } from 'react-router-dom';
 
 import './Sign.css';
 
 const Signin: React.FC = () => {
-  const { signin } = useAuth();
+  const { signin, isAuthenticated } = useAuth();
 
   const {
     control,
     reset,
-    clearErrors,
     handleSubmit,
     formState: { errors, isSubmitSuccessful },
   } = useForm({
@@ -24,8 +24,9 @@ const Signin: React.FC = () => {
   const onSubmit = (formData: SignInForm) => {
     signin(formData);
     reset();
-    clearErrors('email');
   };
+
+  if (isAuthenticated) return <Redirect to='/location' />;
 
   return (
     <IonPage>

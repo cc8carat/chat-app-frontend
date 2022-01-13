@@ -45,6 +45,7 @@ const AuthState: React.FC = ({ children }) => {
         data: { name, _id, token },
       } = await axios.post(`${process.env.REACT_APP_CHOK_API}/auth/signin`, formData);
       setAndStoreToken(token);
+      setIsAuthenticated(true);
       console.log(name);
     } catch (error) {
       console.error(error);

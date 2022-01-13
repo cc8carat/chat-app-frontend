@@ -14,11 +14,13 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import { paperPlaneOutline } from 'ionicons/icons';
+import { useAuth } from '../context/AuthContext';
 
 import './Chat.css';
 
 const Chat: React.FC = () => {
   const [text, setText] = useState<string>('');
+  const { isAuthenticated } = useAuth();
 
   //mock data
   const isEmpty = false;

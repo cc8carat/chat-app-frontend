@@ -18,19 +18,20 @@ setupIonicReact();
 const App: React.FC = () => {
   const { isAuthenticated } = useAuth();
   return (
-    <IonApp>
-      <IonReactRouter>
-        <AuthState>
+    <AuthState>
+      <IonApp>
+        <IonReactRouter>
           <IonRouterOutlet>
-            <Route path='/signup' component={Signup}></Route>
-            <Route path='/signin' component={Signin}></Route>
-            <Route path='/chat' component={Chat}></Route>
-            <Route path='/location'>{isAuthenticated ? <Map /> : <Redirect to='/signin' />}</Route>
+            <Route exact path='/signup' component={Signup}></Route>
+            <Route exact path='/signin' component={Signin}></Route>
+            <Route exact path='/chat' component={Chat}></Route>
+            <Route exact path='/location' render={() => (isAuthenticated ? <Map /> : <Redirect to='/signin' />)} />
+
             <Redirect exact from='/' to='/signin' />
           </IonRouterOutlet>
-        </AuthState>
-      </IonReactRouter>
-    </IonApp>
+        </IonReactRouter>
+      </IonApp>
+    </AuthState>
   );
 };
 
