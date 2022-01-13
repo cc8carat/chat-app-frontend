@@ -26,7 +26,7 @@ const Signin: React.FC = () => {
     reset();
   };
 
-  if (isAuthenticated) return <Redirect to='/location' />;
+  if (isAuthenticated) return <Redirect to='/protected' />;
 
   return (
     <IonPage>

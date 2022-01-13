@@ -5,7 +5,7 @@ const Map: React.FC = () => {
   return (
     <IonPage>
       <IonContent fullscreen={true}>
-        <IonRouterLink routerLink='/chat'>
+        <IonRouterLink routerLink='/protected/chat'>
           <IonButton>Check in</IonButton>
         </IonRouterLink>
       </IonContent>
