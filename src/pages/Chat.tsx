@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { io, Socket } from 'socket.io-client';
 import {
   IonButton,
   IonCol,
@@ -18,9 +19,33 @@ import { useAuth } from '../context/AuthContext';
 
 import './Chat.css';
 
+interface ServerToClientEvents {
+  noArg: () => void;
+  basicEmit: (a: number, b: string, c: Buffer) => void;
+  withAck: (d: string, callback: (e: number) => void) => void;
+}
+
+interface ClientToServerEvents {
+  hello: () => void;
+}
+
+interface InterServerEvents {
+  ping: () => void;
+}
+
+interface SocketData {
+  name: string;
+  age: number;
+}
+
 const Chat: React.FC = () => {
   const [text, setText] = useState<string>('');
   const { isAuthenticated } = useAuth();
+  const [socket, setSocket] = useState<Socket<ServerToClientEvents, ClientToServerEvents>>();
+
+  useEffect(() => {
+    setSocket(io('http://localhost:6001'));
+  }, []);
 
   //mock data
   const isEmpty = false;
