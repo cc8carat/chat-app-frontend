@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   IonButton,
   IonCol,
@@ -40,18 +40,18 @@ const Chat: React.FC = () => {
   // moke user
   const currentUser = 'chloe';
 
-  const scrollToBottom = () => {
-    contentRef.current && contentRef.current.scrollToBottom(200);
-  };
-
   const handleTextChange = (e: CustomEvent) => {
     setText(e.detail.value);
-    setTimeout(() => scrollToBottom(), 1000);
   };
 
-  const sendMessageHandler = () => {
+  const handleMessageSubmit = () => {
     setMessages((prev) => [...prev, { user: currentUser, message: text, createAt: '12:07' }]);
+    setText('');
   };
+
+  useEffect(() => {
+    contentRef.current && contentRef.current.scrollToBottom(200);
+  }, [messages]);
 
   return (
     <IonPage>
@@ -89,7 +89,7 @@ const Chat: React.FC = () => {
             </IonCol>
 
             <IonCol size='2'>
-              <IonButton className='message-btn' expand='block' disabled={isEmpty} shape='round' onClick={sendMessageHandler}>
+              <IonButton className='message-btn' type='submit' expand='block' disabled={isEmpty} shape='round' onClick={handleMessageSubmit}>
                 <IonIcon icon={paperPlaneOutline} slot='icon-only' />
               </IonButton>
             </IonCol>
