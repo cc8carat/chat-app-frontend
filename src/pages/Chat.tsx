@@ -40,8 +40,10 @@ interface SocketData {
 
 const Chat: React.FC = () => {
   const [text, setText] = useState<string>('');
-  const { isAuthenticated } = useAuth();
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [socket, setSocket] = useState<Socket<ServerToClientEvents, ClientToServerEvents>>();
+
+  const { user } = useAuth();
 
   useEffect(() => {
     setSocket(io('http://localhost:6001'));
@@ -62,15 +64,13 @@ const Chat: React.FC = () => {
   ]);
 
   const contentRef = useRef<HTMLIonContentElement | null>(null);
-  // moke user
-  const currentUser = 'chloe';
 
   const handleTextChange = (e: CustomEvent) => {
     setText(e.detail.value);
   };
 
   const handleMessageSubmit = () => {
-    setMessages((prev) => [...prev, { user: currentUser, message: text, createAt: '12:07' }]);
+    setMessages((prev) => [...prev, { user: user.userName, message: text, createAt: '12:07' }]);
     setText('');
   };
 
@@ -92,11 +92,11 @@ const Chat: React.FC = () => {
             return (
               <IonRow key={index} className='ion-margin'>
                 <IonCol
-                  className={message.user === currentUser ? 'message my-message' : 'message other-message'}
-                  offset={message.user === currentUser ? '3' : '0'}
+                  className={message.user === user.userName ? 'message my-message' : 'message other-message'}
+                  offset={message.user === user.userName ? '3' : '0'}
                   size='9'
                 >
-                  <div>{message.user}</div>
+                  <div>{message.user === user.userName ? 'You' : message.user}</div>
                   <div>{message.message}</div>
                   <div className='time  ion-text-right'>{message.createAt}</div>
                 </IonCol>
