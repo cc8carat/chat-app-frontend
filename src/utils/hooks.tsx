@@ -9,7 +9,7 @@ const useCapStorage = (): [string | null, (newToken: any) => void] => {
     setToken(initialToken);
   };
   getInitialToken();
-  const setAndStoreToken = (newToken: string) => {
+  const setAndStoreToken = (newToken: any) => {
     set('token', newToken);
     setToken(newToken);
   };
