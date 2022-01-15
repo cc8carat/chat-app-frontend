@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, createContext, FC } from 'react';
+import { useState, useEffect, useContext, createContext } from 'react';
 import axios from 'axios';
 import { Storage } from '@capacitor/storage';
 import useCapStorage from '../utils/hooks';

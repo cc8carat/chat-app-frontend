@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { useParams } from 'react-router-dom';
 import {
   IonButton,
   IonCol,
@@ -13,14 +13,17 @@ import {
   IonTextarea,
   IonTitle,
   IonToolbar,
+  IonButtons,
+  IonBackButton,
 } from '@ionic/react';
 import { paperPlaneOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
 
 import './Chat.css';
 
 interface ServerToClientEvents {
-  noArg: () => void;
+  welcome: (message: string) => void;
   basicEmit: (a: number, b: string, c: Buffer) => void;
   withAck: (d: string, callback: (e: number) => void) => void;
 }
@@ -38,30 +41,21 @@ interface SocketData {
   age: number;
 }
 
+type ChatParams = {
+  id: string;
+};
+
 const Chat: React.FC = () => {
   const [text, setText] = useState<string>('');
   const [isCurrentUser, setIsCurrentUser] = useState(false);
-  const [socket, setSocket] = useState<Socket<ServerToClientEvents, ClientToServerEvents>>();
-
-  const { user } = useAuth();
-
-  useEffect(() => {
-    setSocket(io('http://localhost:6001'));
-  }, []);
-
-  //mock data
+  const [messages, setMessages] = useState<{ userId: string; userName: string; message: string; createAt: string }[]>([]);
+  const [newMessage, setNewMessages] = useState('');
   const isEmpty = false;
 
-  //mock data
-  const [messages, setMessages] = useState<{ user: string; message: string; createAt: string }[]>([
-    { user: 'chloe', message: 'Hello there', createAt: '10:04' },
-    {
-      user: 'thomas',
-      message: 'sdkhg;adgalsjg;sdfng;salg;sfdgjs; ns;dnga;ghas;kdhgksljdfbgkajbglashdfkjsbdaglbadgb;vfblaibdglasjbgashdf;agdajdgasg',
-      createAt: '2020-12-02',
-    },
-    { user: 'noOne', message: '你好', createAt: '2020-12-09' },
-  ]);
+  const { user } = useAuth();
+  const { sendMessage, joinRoom } = useSocket();
+
+  const { id: roomId } = useParams<ChatParams>();
 
   const contentRef = useRef<HTMLIonContentElement | null>(null);
 
@@ -70,9 +64,15 @@ const Chat: React.FC = () => {
   };
 
   const handleMessageSubmit = () => {
-    setMessages((prev) => [...prev, { user: user.userName, message: text, createAt: '12:07' }]);
+    setMessages((prev) => [...prev, { userId: user.userId, userName: user.userName, message: text, createAt: '12:07' }]);
+    sendMessage(text, roomId);
+
     setText('');
   };
+
+  useEffect(() => {
+    joinRoom(roomId, 'Home');
+  }, []);
 
   useEffect(() => {
     contentRef.current && contentRef.current.scrollToBottom(200);
@@ -82,6 +82,9 @@ const Chat: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar className='ion-text-center' color='primary'>
+          <IonButtons slot='start'>
+            <IonBackButton text='' />
+          </IonButtons>
           <IonTitle>location</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -92,11 +95,11 @@ const Chat: React.FC = () => {
             return (
               <IonRow key={index} className='ion-margin'>
                 <IonCol
-                  className={message.user === user.userName ? 'message my-message' : 'message other-message'}
-                  offset={message.user === user.userName ? '3' : '0'}
+                  className={message.userName === user.userName ? 'message my-message' : 'message other-message'}
+                  offset={message.userName === user.userName ? '3' : '0'}
                   size='9'
                 >
-                  <div>{message.user === user.userName ? 'You' : message.user}</div>
+                  <div>{message.userName === user.userName ? 'You' : message.userName}</div>
                   <div>{message.message}</div>
                   <div className='time  ion-text-right'>{message.createAt}</div>
                 </IonCol>
