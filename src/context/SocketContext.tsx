@@ -21,7 +21,7 @@ interface ClientToServerEvents {
   hello: () => void;
   connect: () => void;
   send: (message: any, roomId: string) => void;
-  join: (roomId: string, callback: (message: string) => void) => void;
+  join: (roomId: string, callback: () => void) => void;
   message: (message: any) => void;
   leave: (roomId: string) => void;
 }
@@ -59,7 +59,7 @@ const SocketState: React.FC = ({ children }) => {
   };
 
   const joinRoom = (roomId: string, name: string) => {
-    socketRef.current.emit('join', roomId, (message: string) => {
+    socketRef.current.emit('join', roomId, () => {
       console.log(`You have checked in at ${name}`);
     });
   };
