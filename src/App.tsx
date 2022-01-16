@@ -24,9 +24,7 @@ const App: React.FC = () => {
           <IonRouterOutlet>
             <Route path='/signup' component={Signup}></Route>
             <Route path='/signin' component={Signin}></Route>
-
             <Route path='/protected' component={ProtectedRoute}></Route>
-
             <Redirect exact from='/' to='/signin' />
           </IonRouterOutlet>
         </IonReactRouter>
