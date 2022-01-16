@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
+import { useStorage } from '@capacitor-community/storage-react';
+import axios from 'axios';
 import {
   IonButton,
   IonCol,
@@ -15,6 +17,10 @@ import {
   IonToolbar,
   IonButtons,
   IonBackButton,
+  IonMenuButton,
+  IonMenu,
+  IonList,
+  IonItem,
 } from '@ionic/react';
 import { paperPlaneOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
@@ -53,11 +59,31 @@ const Chat: React.FC = () => {
   const { user } = useAuth();
   const { id: roomId } = useParams<ChatParams>();
   const location = useLocation();
+  const { get } = useStorage();
   const { sendMessage, joinRoom, newMessage, leaveRoom } = useSocket();
   const contentRef = useRef<HTMLIonContentElement | null>(null);
 
   useEffect(() => {
     joinRoom(roomId, 'Home');
+    const getAllMessages = async () => {
+      try {
+        const token = await get('token');
+        if (token) {
+          const { data } = await axios.get(`${process.env.REACT_APP_CHOK_API}/message/${roomId}`, {
+            headers: { Authorization: token },
+          });
+          const newMessages = data.map(
+            ({ user: { name, _id }, createdAt, text }: { user: { name: string; _id: string }; createdAt: string; text: string }) => {
+              return { userName: name, userId: _id, message: text, createdAt: createdAt };
+            }
+          );
+          setMessages(newMessages);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getAllMessages();
   }, []);
 
   useEffect(() => {
@@ -78,10 +104,28 @@ const Chat: React.FC = () => {
   };
 
   const handleMessageSubmit = () => {
+    const sendMessageToDatabase = async () => {
+      try {
+        const token = await get('token');
+        if (token) {
+          await axios.post(
+            `${process.env.REACT_APP_CHOK_API}/message/${roomId}`,
+            { text },
+            {
+              headers: { Authorization: token },
+            }
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     if (text) {
-      setMessages((prev) => [...prev, { userId: user.userId, userName: user.userName, message: text, createAt: Date() }]);
-      sendMessage({ userId: user.userId, userName: user.userName, message: text, createAt: Date() }, roomId);
+      setMessages((prev) => [...prev, { userId: user.userId, userName: user.userName, message: text, createdAt: Date() }]);
+      sendMessage({ userId: user.userId, userName: user.userName, message: text, createdAt: Date() }, roomId);
       setText('');
+      sendMessageToDatabase();
     }
   };
 
@@ -92,6 +136,7 @@ const Chat: React.FC = () => {
           <IonButtons slot='start'>
             <IonBackButton text='' />
           </IonButtons>
+
           <IonTitle>location</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -101,16 +146,16 @@ const Chat: React.FC = () => {
           {messages &&
             messages.map((message, index) => {
               return (
-                <IonRow key={index} className='ion-margin'>
+                <IonRow key={index}>
                   <IonCol
                     className={message.userName === user.userName ? 'message my-message' : 'message other-message'}
                     offset={message.userName === user.userName ? '3' : '0'}
                     size='9'
                   >
-                    <div className='user-name'>{message.userName === user.userName ? 'You' : message.userName}</div>
+                    <div className='user-name'>{message.userName !== user.userName && message.userName}</div>
                     <div className='chat-bubble'>
                       <div className='chat-text'>{message.message}</div>
-                      <div className='time  ion-text-right'>{formatDate(message.createAt)}</div>
+                      <div className='time  ion-text-right'>{formatDate(message.createdAt)}</div>
                     </div>
                   </IonCol>
                 </IonRow>
