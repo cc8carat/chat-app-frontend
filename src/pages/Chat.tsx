@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import {
   IonButton,
   IonCol,
@@ -19,6 +19,8 @@ import {
 import { paperPlaneOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
+import { Message } from '../interfaces/types';
+import formatDate from '../utils/formatDate';
 
 import './Chat.css';
 
@@ -46,37 +48,42 @@ type ChatParams = {
 };
 
 const Chat: React.FC = () => {
-  const [text, setText] = useState<string>('');
-  const [isCurrentUser, setIsCurrentUser] = useState(false);
-  const [messages, setMessages] = useState<{ userId: string; userName: string; message: string; createAt: string }[]>([]);
-  const [newMessage, setNewMessages] = useState('');
-  const isEmpty = false;
-
+  const [text, setText] = useState<string | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const { user } = useAuth();
-  const { sendMessage, joinRoom } = useSocket();
-
   const { id: roomId } = useParams<ChatParams>();
-
+  const location = useLocation();
+  const { sendMessage, joinRoom, newMessage, leaveRoom } = useSocket();
   const contentRef = useRef<HTMLIonContentElement | null>(null);
-
-  const handleTextChange = (e: CustomEvent) => {
-    setText(e.detail.value);
-  };
-
-  const handleMessageSubmit = () => {
-    setMessages((prev) => [...prev, { userId: user.userId, userName: user.userName, message: text, createAt: '12:07' }]);
-    sendMessage(text, roomId);
-
-    setText('');
-  };
 
   useEffect(() => {
     joinRoom(roomId, 'Home');
   }, []);
 
   useEffect(() => {
+    newMessage && setMessages((prev) => [...prev, newMessage]);
+  }, [newMessage]);
+
+  useEffect(() => {
     contentRef.current && contentRef.current.scrollToBottom(200);
   }, [messages]);
+
+  useEffect(() => {
+    location.pathname !== `/protected/chat/${roomId}` && leaveRoom(roomId);
+    setMessages([]);
+  }, [location]);
+
+  const handleTextChange = (e: CustomEvent) => {
+    setText(e.detail.value);
+  };
+
+  const handleMessageSubmit = () => {
+    if (text) {
+      setMessages((prev) => [...prev, { userId: user.userId, userName: user.userName, message: text, createAt: Date() }]);
+      sendMessage({ userId: user.userId, userName: user.userName, message: text, createAt: Date() }, roomId);
+      setText('');
+    }
+  };
 
   return (
     <IonPage>
@@ -91,21 +98,24 @@ const Chat: React.FC = () => {
 
       <IonContent scrollEvents={true} ref={contentRef}>
         <IonGrid>
-          {messages.map((message, index) => {
-            return (
-              <IonRow key={index} className='ion-margin'>
-                <IonCol
-                  className={message.userName === user.userName ? 'message my-message' : 'message other-message'}
-                  offset={message.userName === user.userName ? '3' : '0'}
-                  size='9'
-                >
-                  <div>{message.userName === user.userName ? 'You' : message.userName}</div>
-                  <div>{message.message}</div>
-                  <div className='time  ion-text-right'>{message.createAt}</div>
-                </IonCol>
-              </IonRow>
-            );
-          })}
+          {messages &&
+            messages.map((message, index) => {
+              return (
+                <IonRow key={index} className='ion-margin'>
+                  <IonCol
+                    className={message.userName === user.userName ? 'message my-message' : 'message other-message'}
+                    offset={message.userName === user.userName ? '3' : '0'}
+                    size='9'
+                  >
+                    <div className='user-name'>{message.userName === user.userName ? 'You' : message.userName}</div>
+                    <div className='chat-bubble'>
+                      <div className='chat-text'>{message.message}</div>
+                      <div className='time  ion-text-right'>{formatDate(message.createAt)}</div>
+                    </div>
+                  </IonCol>
+                </IonRow>
+              );
+            })}
         </IonGrid>
       </IonContent>
 
@@ -117,7 +127,7 @@ const Chat: React.FC = () => {
             </IonCol>
 
             <IonCol size='2'>
-              <IonButton className='message-btn' type='submit' expand='block' disabled={isEmpty} shape='round' onClick={handleMessageSubmit}>
+              <IonButton className='message-btn' type='submit' expand='block' disabled={!text} shape='round' onClick={handleMessageSubmit}>
                 <IonIcon icon={paperPlaneOutline} slot='icon-only' />
               </IonButton>
             </IonCol>
