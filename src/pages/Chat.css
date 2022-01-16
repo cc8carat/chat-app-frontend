@@ -4,19 +4,34 @@
   white-space: pre-wrap;
 }
 
-.other-message {
-  background-color: var(--ion-color-secondary);
-  color: white;
-}
-
-.my-message {
+.other-message .chat-bubble {
   background-color: var(--ion-color-tertiary);
   color: white;
+  border-top-left-radius: 2px;
+}
+
+.my-message .chat-bubble {
+  background-color: var(--ion-color-secondary);
+  color: white;
+  border-top-right-radius: 1px;
+}
+
+.chat-bubble {
+  padding: 0.5em 0.5em 0 0.5em;
+  border-radius: 8px;
+}
+
+.user-name {
+  font-size: 0.6em;
+  margin: 0.6em;
+  margin-left: 0;
 }
 
 .time {
   color: gainsboro;
-  font-size: small;
+  font-size: 0.5em;
+  padding: 0.5em;
+  margin-top: 0;
 }
 
 .message-textarea {

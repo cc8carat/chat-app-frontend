@@ -6,7 +6,7 @@ const useCapStorage = (): [string | null, (newToken: any) => void] => {
   const [token, setToken] = useState<string | null>('');
   const getInitialToken = async () => {
     const initialToken = await get('token');
-    setToken(initialToken);
+    if (initialToken) setToken(initialToken);
   };
   getInitialToken();
   const setAndStoreToken = (newToken: any) => {

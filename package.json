@@ -19,6 +19,7 @@
     "@ionic/react": "^6.0.0",
     "@ionic/react-router": "^6.0.0",
     "axios": "^0.24.0",
+    "dayjs": "^1.10.7",
     "ionicons": "^5.4.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

@@ -13,26 +13,20 @@ import Map from './pages/Map';
 import ProtectedRoute from './pages/ProtectedRoute';
 import AuthState from './context/AuthContext';
 import SocketState from './context/SocketContext';
-import { useAuth } from './context/AuthContext';
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  const { isAuthenticated } = useAuth();
   return (
     <AuthState>
       <IonApp>
         <IonReactRouter>
           <IonRouterOutlet>
-            <Route exact path='/signup' component={Signup}></Route>
-            <Route exact path='/signin' component={Signin}></Route>
+            <Route path='/signup' component={Signup}></Route>
+            <Route path='/signin' component={Signin}></Route>
+
             <Route path='/protected' component={ProtectedRoute}></Route>
-            <Route path='/map' component={Map}></Route>
-            <Route path='/chat/:id'>
-              <SocketState>
-                <Chat />
-              </SocketState>
-            </Route>
+
             <Redirect exact from='/' to='/signin' />
           </IonRouterOutlet>
         </IonReactRouter>
