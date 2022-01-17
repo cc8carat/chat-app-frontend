@@ -51,13 +51,14 @@ interface SocketData {
 
 type ChatParams = {
   id: string;
+  name: string;
 };
 
 const Chat: React.FC = () => {
   const [text, setText] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const { user } = useAuth();
-  const { id: roomId } = useParams<ChatParams>();
+  const { id: roomId, name } = useParams<ChatParams>();
   const location = useLocation();
   const { get } = useStorage();
   const { sendMessage, joinRoom, newMessage, leaveRoom } = useSocket();
@@ -95,7 +96,7 @@ const Chat: React.FC = () => {
   }, [messages]);
 
   useEffect(() => {
-    location.pathname !== `/protected/chat/${roomId}` && leaveRoom(roomId);
+    location.pathname !== `/protected/chat/${name}/${roomId}` && leaveRoom(roomId);
     setMessages([]);
   }, [location]);
 
@@ -136,8 +137,7 @@ const Chat: React.FC = () => {
           <IonButtons slot='start'>
             <IonBackButton text='' />
           </IonButtons>
-
-          <IonTitle>location</IonTitle>
+          <IonTitle>{name}</IonTitle>
         </IonToolbar>
       </IonHeader>
 

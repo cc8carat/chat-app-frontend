@@ -23,6 +23,7 @@
     "axios": "^0.24.0",
     "dayjs": "^1.10.7",
     "ionicons": "^5.4.0",
+    "pigeon-maps": "^0.19.7",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-hook-form": "^7.22.5",
