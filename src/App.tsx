@@ -9,10 +9,8 @@ import Tab3 from './pages/Tab3';
 import Signup from './pages/Signup';
 import Chat from './pages/Chat';
 import Signin from './pages/Signin';
-import Map from './pages/Map';
 import ProtectedRoute from './pages/ProtectedRoute';
 import AuthState from './context/AuthContext';
-import SocketState from './context/SocketContext';
 
 setupIonicReact();
 

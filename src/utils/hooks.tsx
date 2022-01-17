@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStorage } from '@capacitor-community/storage-react';
+import axios from 'axios';
 
-const useCapStorage = (): [string | null, (newToken: any) => void] => {
+export const useCapStorage = (): [string | null, (newToken: any) => void] => {
   const { get, set } = useStorage();
   const [token, setToken] = useState<string | null>('');
   const getInitialToken = async () => {
@@ -16,4 +17,22 @@ const useCapStorage = (): [string | null, (newToken: any) => void] => {
   return [token, setAndStoreToken];
 };
 
-export default useCapStorage;
+export const useNearbyRooms = (coordinates: [number, number]): any => {
+  const [rooms, setRooms] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    const getNearByRooms = async () => {
+      if (coordinates) {
+        const params = {
+          longitude: coordinates[0],
+          latitude: coordinates[1],
+        };
+        const { data } = await axios.get(`${process.env.REACT_APP_CHOK_API}/room`, { params: params });
+        setRooms(data);
+      }
+    };
+    getNearByRooms();
+  }, [coordinates]);
+
+  return rooms;
+};

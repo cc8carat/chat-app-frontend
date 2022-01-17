@@ -1,6 +1,6 @@
 import { useAuth } from '../context/AuthContext';
 import { Redirect, Route } from 'react-router-dom';
-import Map from '../pages/Map';
+import Maps from './Maps';
 import Chat from '../pages/Chat';
 import { IonPage, IonRouterOutlet } from '@ionic/react';
 import SocketState from '../context/SocketContext';
@@ -12,8 +12,8 @@ const ProtectedRoute: React.FC = () => {
     <SocketState>
       <IonPage>
         <IonRouterOutlet>
-          <Route exact path='/protected' component={Map}></Route>
-          <Route exact path='/protected/chat/:id' component={Chat}></Route>
+          <Route exact path='/protected' component={Maps}></Route>
+          <Route exact path='/protected/chat/:name/:id' component={Chat}></Route>
         </IonRouterOutlet>
       </IonPage>
     </SocketState>
