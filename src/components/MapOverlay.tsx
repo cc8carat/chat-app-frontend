@@ -1,23 +1,51 @@
-import { IonButton, IonCard, IonContent, IonCardSubtitle, IonNote, IonInput } from '@ionic/react';
-import { useState } from 'react';
+import { IonButton, IonCard, IonCardSubtitle, IonRow, IonInput } from '@ionic/react';
+import { useEffect, useState } from 'react';
+import './MapOverlay.css';
 
-const MapOverlay: React.FC<any> = ({ selectedRoom, userCount, overlayType, searchText, handleSelectePositionClick, currentRoom }) => {
-  const [text, setText] = useState<string | null>(null);
+const MapOverlay: React.FC<any> = ({ selectedRoom, overlayType, searchText, handleSelectePositionClick, currentRoom }) => {
+  const [text, setText] = useState<string | null>();
 
-  const handleOnChange = () => {};
+  useEffect(() => {
+    setText(searchText);
+  }, [searchText]);
+
   return (
-    <IonCard color='light'>
-      <IonCardSubtitle>{overlayType === 'room' ? selectedRoom.name : searchText}</IonCardSubtitle>
-      <IonNote>{userCount}</IonNote>
+    <IonCard className='overlay-card'>
+      {overlayType === 'room' && selectedRoom ? (
+        <>
+          <IonCardSubtitle className='room-name room-name-selected-room'>{selectedRoom.name}</IonCardSubtitle>
 
-      {overlayType === 'room' ? (
-        <IonButton routerLink={`protected/chat/${selectedRoom.name}/${selectedRoom._id}`} size='small'>
-          Check in
-        </IonButton>
+          <IonRow className='ion-align-items-center ion-justify-content-center'>
+            <IonButton className='overlay-button' routerLink={`protected/chat/${selectedRoom.name}/${selectedRoom._id}`} size='small'>
+              Check in
+            </IonButton>
+          </IonRow>
+        </>
       ) : (
-        <IonButton onClick={() => handleSelectePositionClick(text)}>Create room</IonButton>
+        <>
+          <IonRow className='ion-justify-content-center'>
+            <IonCardSubtitle className='room-name .ion-text-justify'>
+              <IonInput
+                className='new-room-name-input'
+                onIonChange={(e) => setText(e.detail.value!)}
+                value={text}
+                placeholder={searchText ? searchText : 'Spot name'}
+              ></IonInput>
+            </IonCardSubtitle>
+          </IonRow>
+          <IonRow className='ion-justify-content-center'>
+            <IonButton
+              expand='block'
+              className='overlay-button-create-room'
+              onClick={() => handleSelectePositionClick(text)}
+              size='small'
+              disabled={!text}
+            >
+              Create room
+            </IonButton>
+          </IonRow>
+        </>
       )}
-      {overlayType === 'selectedPosition' && <IonInput onIonChange={(e) => setText(e.detail.value!)} value={text}></IonInput>}
     </IonCard>
   );
 };

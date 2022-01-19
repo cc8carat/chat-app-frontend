@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext, createContext } from 'react';
 import axios from 'axios';
-import { Storage } from '@capacitor/storage';
 import { useCapStorage } from '../utils/hooks';
 
 export type SignUpForm = {
@@ -19,6 +18,7 @@ interface AuthContextProps {
   user: { userId: string; userName: string };
   signup: (formData: SignUpForm) => Promise<void>;
   signin: (formData: SignInForm) => Promise<void>;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext({} as AuthContextProps);
@@ -28,10 +28,12 @@ const AuthState: React.FC = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setAndStoreToken] = useCapStorage();
   const [user, setUser] = useState({ userId: '', userName: '' });
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (token) {
       const autoSignin = async () => {
+        setIsLoading(true);
         try {
           const {
             data: { _id, name },
@@ -40,8 +42,10 @@ const AuthState: React.FC = ({ children }) => {
           });
           setUser({ userId: _id, userName: name });
           setIsAuthenticated(true);
+          setIsLoading(false);
         } catch (error) {
           console.error(error);
+          setIsLoading(false);
         }
       };
       autoSignin();
@@ -70,7 +74,7 @@ const AuthState: React.FC = ({ children }) => {
     }
   };
 
-  return <AuthContext.Provider value={{ isAuthenticated, signup, signin, user }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ isAuthenticated, signup, signin, user, isLoading }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthState;

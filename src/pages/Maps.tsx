@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonFooter, IonSearchbar } from '@ionic/react';
+import { IonContent, IonPage, IonToolbar, IonFooter, IonSearchbar, IonLoading } from '@ionic/react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import { useStorage } from '@capacitor-community/storage-react';
-import { Geolocation, Position } from '@capacitor/geolocation';
+import { Geolocation } from '@capacitor/geolocation';
 import { Map, Marker, Point, Overlay } from 'pigeon-maps';
 import { useNearbyRooms } from '../utils/hooks';
 import MapOverlay from '../components/MapOverlay';
@@ -13,43 +13,44 @@ import './Maps.css';
 
 const Maps: React.FC = () => {
   const [myPosition, setMyPosition] = useState<[number, number] | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isMapLoading, setIsMapLoading] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<[number, number]>();
   const [selectedRoom, setSelectedRoom] = useState<any>();
   const [searchText, setSearchText] = useState<string | null>(null);
   const [overlayType, setOverlayType] = useState<'room' | 'selectedPosition'>('room');
   const [currentRoom, setCurrentRoom] = useState<any>();
-  const [isRoomCreated, setIsRoomCreated] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(true);
   const { userCount } = useSocket();
   const rooms = useNearbyRooms(selectedPosition!);
   const { get } = useStorage();
 
-  //Will add loader
-
   useEffect(() => {
     const getMyPosition = async () => {
-      setIsLoading(true);
+      setIsMapLoading(true);
       const {
         coords: { longitude, latitude },
       } = await Geolocation.getCurrentPosition();
       setMyPosition([latitude, longitude]);
       setSelectedPosition([latitude, longitude]);
-      setIsLoading(false);
+      setIsMapLoading(false);
     };
     getMyPosition();
   }, []);
 
   const handleMapClick = ({ latLng }: { latLng: [number, number] }) => {
+    setShowOverlay(false);
     setSelectedPosition(latLng);
   };
 
   const handleRoomMarkerClick = ({ anchor, payload }: { anchor: Point; payload: any }) => {
+    setShowOverlay(true);
     const selectedRoom = rooms.find((room: any) => room.location.coordinates[1] === anchor[0] && room.location.coordinates[0] === anchor[1]);
     setSelectedRoom(selectedRoom);
     setOverlayType('room');
   };
 
   const handleSelectedPositionMarkerClick = () => {
+    setShowOverlay(true);
     setOverlayType('selectedPosition');
   };
 
@@ -104,10 +105,10 @@ const Maps: React.FC = () => {
             onIonChange={(e) => setSearchText(e.detail.value!)}
           />
         </form>
+        <IonLoading cssClass='loader' isOpen={isMapLoading} message={'Please wait...'}></IonLoading>
 
         {myPosition && (
           <Map onClick={handleMapClick} defaultCenter={myPosition} center={selectedPosition} defaultZoom={13} touchEvents={true} animate={true}>
-            <Marker width={50} anchor={myPosition} color='#d7a2ff' />
             {rooms &&
               rooms.map((room: any) => {
                 return (
@@ -119,14 +120,17 @@ const Maps: React.FC = () => {
                   />
                 );
               })}
-            {selectedPosition && <Marker width={50} anchor={selectedPosition} color='#ed8787' onClick={handleSelectedPositionMarkerClick} />}
-            {selectedRoom && overlayType === 'room' && (
-              <Overlay anchor={[selectedRoom.location.coordinates[1], selectedRoom.location.coordinates[0]]} offset={[120, 100]}>
+            {selectedPosition && selectedPosition !== myPosition && (
+              <Marker width={50} anchor={selectedPosition} color='#ed8787' onClick={handleSelectedPositionMarkerClick} />
+            )}
+            <Marker width={50} anchor={myPosition} color='#d7a2ff' />
+            {showOverlay === true && selectedRoom && overlayType === 'room' && (
+              <Overlay anchor={[selectedRoom.location.coordinates[1], selectedRoom.location.coordinates[0]]} offset={[83, 27]}>
                 <MapOverlay selectedRoom={selectedRoom} userCount={userCount} overlayType={overlayType} searchText={searchText} />
               </Overlay>
             )}
-            {selectedPosition && overlayType === 'selectedPosition' && (
-              <Overlay anchor={selectedPosition} offset={[95, 153]}>
+            {showOverlay === true && selectedPosition && overlayType === 'selectedPosition' && (
+              <Overlay anchor={selectedPosition} offset={[83, 27]}>
                 <MapOverlay
                   selectedRoom={selectedRoom}
                   userCount={userCount}
@@ -142,9 +146,7 @@ const Maps: React.FC = () => {
       </IonContent>
 
       <IonFooter collapse='fade'>
-        <IonToolbar>
-          <IonTitle>Something here</IonTitle>
-        </IonToolbar>
+        <IonToolbar></IonToolbar>
       </IonFooter>
     </IonPage>
   );
