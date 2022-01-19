@@ -1,25 +1,13 @@
 import { useAuth } from '../context/AuthContext';
-import { Redirect, Route } from 'react-router-dom';
-import Maps from './Maps';
-import Chat from '../pages/Chat';
-import { IonPage, IonRouterOutlet } from '@ionic/react';
-import SocketState from '../context/SocketContext';
+import { Redirect, Route, RouteProps } from 'react-router-dom';
 
-const ProtectedRoute: React.FC = () => {
+interface ProtectedRouteProps extends RouteProps {
+  component: React.FC;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ component: Component, ...rest }) => {
   const { isAuthenticated } = useAuth();
-
-  return isAuthenticated ? (
-    <SocketState>
-      <IonPage>
-        <IonRouterOutlet>
-          <Route exact path='/protected' component={Maps}></Route>
-          <Route exact path='/protected/chat/:name/:id' component={Chat}></Route>
-        </IonRouterOutlet>
-      </IonPage>
-    </SocketState>
-  ) : (
-    <Redirect to='/signin' />
-  );
+  return isAuthenticated ? <Route {...rest} render={() => <Component />} /> : <Redirect to='/signin' />;
 };
 
 export default ProtectedRoute;
