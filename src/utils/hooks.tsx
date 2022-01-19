@@ -24,8 +24,8 @@ export const useNearbyRooms = (coordinates: [number, number]): any => {
     const getNearByRooms = async () => {
       if (coordinates) {
         const params = {
-          longitude: coordinates[0],
-          latitude: coordinates[1],
+          longitude: coordinates[1],
+          latitude: coordinates[0],
         };
         const { data } = await axios.get(`${process.env.REACT_APP_CHOK_API}/room`, { params: params });
         setRooms(data);

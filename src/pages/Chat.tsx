@@ -61,11 +61,11 @@ const Chat: React.FC = () => {
   const { id: roomId, name } = useParams<ChatParams>();
   const location = useLocation();
   const { get } = useStorage();
-  const { sendMessage, joinRoom, newMessage, leaveRoom } = useSocket();
+  const { sendMessage, joinRoom, newMessage, leaveRoom, userCount } = useSocket();
   const contentRef = useRef<HTMLIonContentElement | null>(null);
 
   useEffect(() => {
-    joinRoom(roomId, 'Home');
+    joinRoom(roomId, name);
     const getAllMessages = async () => {
       try {
         const token = await get('token');

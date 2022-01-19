@@ -1,3 +1,4 @@
+import { nuclearOutline } from 'ionicons/icons';
 import { useRef, useEffect, useState, useContext, createContext } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { Message } from '../interfaces/types';
@@ -8,6 +9,7 @@ interface SocketContextProps {
   joinRoom: (roomId: string, name: string) => void;
   newMessage: Message | null;
   leaveRoom: (roomId: string) => void;
+  userCount: number;
 }
 
 interface ServerToClientEvents {
@@ -15,15 +17,16 @@ interface ServerToClientEvents {
   basicEmit: (a: number, b: string, c: Buffer) => void;
   withAck: (d: string, callback: (e: number) => void) => void;
   receive: (message: any) => void;
+  countUser: (userCount: any) => void;
 }
 
 interface ClientToServerEvents {
   hello: () => void;
   connect: () => void;
   send: (message: any, roomId: string) => void;
-  join: (roomId: string, callback: () => void) => void;
+  join: (roomId: string, callback: (userCount: number) => void) => void;
   message: (message: any) => void;
-  leave: (roomId: string) => void;
+  leave: (roomId: string, callback: (userCount: number) => void) => void;
 }
 
 interface InterServerEvents {
@@ -40,6 +43,8 @@ export const useSocket = () => useContext(SocketContext);
 
 const SocketState: React.FC = ({ children }) => {
   const [newMessage, setNewmessage] = useState<Message | null>(null);
+  const [userCount, setUserCount] = useState<number>(0);
+  const [welcomeMessage, setWelcomeMessage] = useState<string | null>(null);
   const socketRef = useRef({} as Socket<ServerToClientEvents, ClientToServerEvents>);
   const { user } = useAuth();
 
@@ -48,6 +53,9 @@ const SocketState: React.FC = ({ children }) => {
     socketRef.current.on('connect', () => console.log(socketRef.current.id));
     socketRef.current.on('receive', (message) => {
       setNewmessage(message);
+    });
+    socketRef.current.on('countUser', (userCount) => {
+      setUserCount(userCount);
     });
     return () => {
       socketRef.current.disconnect();
@@ -59,15 +67,16 @@ const SocketState: React.FC = ({ children }) => {
   };
 
   const joinRoom = (roomId: string, name: string) => {
-    socketRef.current.emit('join', roomId, () => {
-      console.log(`You have checked in at ${name}`);
+    socketRef.current.emit('join', roomId, (userCount) => {
+      setUserCount(userCount);
+      setWelcomeMessage(`You have checked in at ${name}`);
     });
   };
 
   const leaveRoom = (roomId: string) => {
-    socketRef.current.emit(`leave`, roomId);
+    socketRef.current.emit(`leave`, roomId, (userCount) => setUserCount(userCount));
   };
-  return <SocketContext.Provider value={{ sendMessage, joinRoom, newMessage, leaveRoom }}>{children}</SocketContext.Provider>;
+  return <SocketContext.Provider value={{ sendMessage, joinRoom, newMessage, leaveRoom, userCount }}>{children}</SocketContext.Provider>;
 };
 
 export default SocketState;
