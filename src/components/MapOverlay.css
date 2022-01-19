@@ -1,0 +1,49 @@
+.overlay-card {
+  --background: rgba(0, 0, 0, 0.788);
+  --color: white;
+  max-width: 40vw;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.room-name {
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 0.8em;
+  margin: 1em;
+  color: white;
+}
+
+.room-name-selected-room {
+  margin-bottom: 0.5em;
+}
+
+.overlay-button {
+  margin-top: 0.2em;
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.user-count-icon {
+  font-size: 1.4em;
+}
+
+.new-room-name-input {
+  color: white;
+  border: 0.4em solid rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  width: 27vw;
+}
+
+.overlay-button-create-room {
+  padding: 0;
+  margin-top: 0.2em;
+  margin-bottom: 1em;
+}
+
+.overlay-card-create-room {
+  --background: rgba(0, 0, 0, 0.788);
+  --color: white;
+  max-width: 30vw;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}

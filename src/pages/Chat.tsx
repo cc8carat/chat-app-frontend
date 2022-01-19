@@ -17,10 +17,6 @@ import {
   IonToolbar,
   IonButtons,
   IonBackButton,
-  IonMenuButton,
-  IonMenu,
-  IonList,
-  IonItem,
 } from '@ionic/react';
 import { paperPlaneOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
@@ -29,25 +25,6 @@ import { Message } from '../interfaces/types';
 import formatDate from '../utils/formatDate';
 
 import './Chat.css';
-
-interface ServerToClientEvents {
-  welcome: (message: string) => void;
-  basicEmit: (a: number, b: string, c: Buffer) => void;
-  withAck: (d: string, callback: (e: number) => void) => void;
-}
-
-interface ClientToServerEvents {
-  hello: () => void;
-}
-
-interface InterServerEvents {
-  ping: () => void;
-}
-
-interface SocketData {
-  name: string;
-  age: number;
-}
 
 type ChatParams = {
   id: string;
@@ -135,9 +112,11 @@ const Chat: React.FC = () => {
       <IonHeader>
         <IonToolbar className='ion-text-center' color='primary'>
           <IonButtons slot='start'>
-            <IonBackButton text='' />
+            <IonBackButton text='' defaultHref='/protected' />
           </IonButtons>
-          <IonTitle>{name}</IonTitle>
+          <IonTitle className='chat-title'>
+            {name}({userCount})
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
 
@@ -173,7 +152,7 @@ const Chat: React.FC = () => {
 
             <IonCol size='2'>
               <IonButton className='message-btn' type='submit' expand='block' disabled={!text} shape='round' onClick={handleMessageSubmit}>
-                <IonIcon icon={paperPlaneOutline} slot='icon-only' />
+                <IonIcon icon={paperPlaneOutline} />
               </IonButton>
             </IonCol>
           </IonRow>

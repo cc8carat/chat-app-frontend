@@ -1,4 +1,3 @@
-import { nuclearOutline } from 'ionicons/icons';
 import { useRef, useEffect, useState, useContext, createContext } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { Message } from '../interfaces/types';
@@ -10,6 +9,7 @@ interface SocketContextProps {
   newMessage: Message | null;
   leaveRoom: (roomId: string) => void;
   userCount: number;
+  welcomeMessage: string | null;
 }
 
 interface ServerToClientEvents {
@@ -27,15 +27,6 @@ interface ClientToServerEvents {
   join: (roomId: string, callback: (userCount: number) => void) => void;
   message: (message: any) => void;
   leave: (roomId: string, callback: (userCount: number) => void) => void;
-}
-
-interface InterServerEvents {
-  ping: () => void;
-}
-
-interface SocketData {
-  name: string;
-  age: number;
 }
 
 const SocketContext = createContext({} as SocketContextProps);
@@ -76,7 +67,9 @@ const SocketState: React.FC = ({ children }) => {
   const leaveRoom = (roomId: string) => {
     socketRef.current.emit(`leave`, roomId, (userCount) => setUserCount(userCount));
   };
-  return <SocketContext.Provider value={{ sendMessage, joinRoom, newMessage, leaveRoom, userCount }}>{children}</SocketContext.Provider>;
+  return (
+    <SocketContext.Provider value={{ sendMessage, joinRoom, newMessage, leaveRoom, userCount, welcomeMessage }}>{children}</SocketContext.Provider>
+  );
 };
 
 export default SocketState;

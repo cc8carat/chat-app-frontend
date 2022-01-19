@@ -1,4 +1,4 @@
-import { IonButton, IonCol, IonContent, IonInput, IonItem, IonLabel, IonPage, IonRouterLink, IonRow, IonIcon } from '@ionic/react';
+import { IonButton, IonCol, IonContent, IonInput, IonItem, IonLabel, IonPage, IonRouterLink, IonRow, IonIcon, IonLoading } from '@ionic/react';
 import { useForm, Controller } from 'react-hook-form';
 import { alertCircleOutline } from 'ionicons/icons';
 import { useAuth, SignInForm } from '../context/AuthContext';
@@ -7,7 +7,7 @@ import { Redirect } from 'react-router-dom';
 import './Sign.css';
 
 const Signin: React.FC = () => {
-  const { signin, isAuthenticated } = useAuth();
+  const { signin, isAuthenticated, isLoading } = useAuth();
 
   const {
     control,
@@ -32,6 +32,7 @@ const Signin: React.FC = () => {
     <IonPage>
       <IonContent className='sign no-scroll'>
         <IonRow className='sign-container ion-padding ion-align-items-center'>
+          <IonLoading cssClass='loader' isOpen={isLoading} message={'Please wait...'}></IonLoading>
           <IonCol>
             <h1>Connect with your community!</h1>
             <p>Log in to continue</p>
