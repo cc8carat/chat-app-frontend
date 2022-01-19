@@ -2,12 +2,8 @@ import { IonButton, IonCard, IonCardSubtitle, IonRow, IonInput } from '@ionic/re
 import { useEffect, useState } from 'react';
 import './MapOverlay.css';
 
-const MapOverlay: React.FC<any> = ({ selectedRoom, overlayType, searchText, handleSelectePositionClick, currentRoom }) => {
+const MapOverlay: React.FC<any> = ({ selectedRoom, overlayType, searchText, handleSelectePositionClick }) => {
   const [text, setText] = useState<string | null>();
-
-  useEffect(() => {
-    setText(searchText);
-  }, [searchText]);
 
   return (
     <IonCard className='overlay-card'>
