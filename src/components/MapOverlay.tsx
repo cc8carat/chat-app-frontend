@@ -25,7 +25,7 @@ const MapOverlay: React.FC<any> = ({ selectedRoom, overlayType, searchText, hand
                 className='new-room-name-input'
                 onIonChange={(e) => setText(e.detail.value!)}
                 value={text}
-                placeholder={searchText ? searchText : 'Spot name'}
+                placeholder={'Spot name'}
               ></IonInput>
             </IonCardSubtitle>
           </IonRow>
