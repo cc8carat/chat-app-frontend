@@ -37,21 +37,23 @@ const SocketState: React.FC = ({ children }) => {
   const [userCount, setUserCount] = useState<number>(0);
   const [welcomeMessage, setWelcomeMessage] = useState<string | null>(null);
   const socketRef = useRef({} as Socket<ServerToClientEvents, ClientToServerEvents>);
-  const { user } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    socketRef.current = io(`${process.env.REACT_APP_CHOK_SOCKET_SERVER}`);
-    socketRef.current.on('connect', () => console.log(socketRef.current.id));
-    socketRef.current.on('receive', (message) => {
-      setNewmessage(message);
-    });
-    socketRef.current.on('countUser', (userCount) => {
-      setUserCount(userCount);
-    });
-    return () => {
-      socketRef.current.disconnect();
-    };
-  }, []);
+    if (isAuthenticated) {
+      socketRef.current = io(`${process.env.REACT_APP_CHOK_SOCKET_SERVER}`);
+      socketRef.current.on('connect', () => console.log(socketRef.current.id));
+      socketRef.current.on('receive', (message) => {
+        setNewmessage(message);
+      });
+      socketRef.current.on('countUser', (userCount) => {
+        setUserCount(userCount);
+      });
+      return () => {
+        socketRef.current.disconnect();
+      };
+    }
+  }, [isAuthenticated]);
 
   const sendMessage = (message: Message, roomId: string) => {
     socketRef.current.emit('send', message, roomId);
