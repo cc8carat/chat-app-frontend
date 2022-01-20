@@ -109,6 +109,9 @@ const Maps: React.FC = () => {
 
         {myPosition && (
           <Map onClick={handleMapClick} defaultCenter={myPosition} center={selectedPosition} defaultZoom={13} touchEvents={true} animate={true}>
+            {selectedPosition && selectedPosition !== myPosition && (
+              <Marker width={50} anchor={selectedPosition} color='#ed8787' onClick={handleSelectedPositionMarkerClick} />
+            )}
             {rooms &&
               rooms.map((room: any) => {
                 return (
@@ -120,9 +123,6 @@ const Maps: React.FC = () => {
                   />
                 );
               })}
-            {selectedPosition && selectedPosition !== myPosition && (
-              <Marker width={50} anchor={selectedPosition} color='#ed8787' onClick={handleSelectedPositionMarkerClick} />
-            )}
             <Marker width={50} anchor={myPosition} color='#d7a2ff' />
             {showOverlay === true && selectedRoom && overlayType === 'room' && (
               <Overlay anchor={[selectedRoom.location.coordinates[1], selectedRoom.location.coordinates[0]]} offset={[83, 27]}>
