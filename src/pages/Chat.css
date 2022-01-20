@@ -8,6 +8,12 @@
   text-transform: uppercase;
 }
 
+.welcome-message {
+  color: #4a4949cf;
+  margin: 1em;
+  font-size: 0.8em;
+}
+
 .other-message .chat-bubble {
   background-color: var(--ion-color-tertiary);
   color: white;

@@ -1,12 +1,13 @@
-import { IonButton, IonCol, IonContent, IonInput, IonItem, IonLabel, IonPage, IonRouterLink, IonRow, IonIcon } from '@ionic/react';
+import { IonButton, IonCol, IonContent, IonInput, IonItem, IonLabel, IonPage, IonRouterLink, IonRow, IonIcon, IonToast } from '@ionic/react';
 import { useForm, Controller } from 'react-hook-form';
 import { alertCircleOutline } from 'ionicons/icons';
 import { useAuth, SignUpForm } from '../context/AuthContext';
+import { Redirect } from 'react-router-dom';
 
 import './Sign.css';
 
 const Signup: React.FC = () => {
-  const { signup } = useAuth();
+  const { isAuthenticated, signup, err } = useAuth();
 
   const {
     control,
@@ -25,6 +26,8 @@ const Signup: React.FC = () => {
     signup(formData);
     reset();
   };
+
+  if (isAuthenticated) return <Redirect to='/protected' />;
 
   return (
     <IonPage>
@@ -102,6 +105,7 @@ const Signup: React.FC = () => {
             </form>
           </IonCol>
         </IonRow>
+        {err && <IonToast isOpen={true} message={err} duration={1200} />}
       </IonContent>
     </IonPage>
   );

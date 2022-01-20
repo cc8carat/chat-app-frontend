@@ -1,4 +1,17 @@
-import { IonButton, IonCol, IonContent, IonInput, IonItem, IonLabel, IonPage, IonRouterLink, IonRow, IonIcon, IonLoading } from '@ionic/react';
+import {
+  IonButton,
+  IonCol,
+  IonContent,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonPage,
+  IonRouterLink,
+  IonRow,
+  IonIcon,
+  IonLoading,
+  IonToast,
+} from '@ionic/react';
 import { useForm, Controller } from 'react-hook-form';
 import { alertCircleOutline } from 'ionicons/icons';
 import { useAuth, SignInForm } from '../context/AuthContext';
@@ -7,7 +20,7 @@ import { Redirect } from 'react-router-dom';
 import './Sign.css';
 
 const Signin: React.FC = () => {
-  const { signin, isAuthenticated, isLoading } = useAuth();
+  const { signin, isAuthenticated, isLoading, err } = useAuth();
 
   const {
     control,
@@ -86,6 +99,7 @@ const Signin: React.FC = () => {
             </form>
           </IonCol>
         </IonRow>
+        {err && <IonToast isOpen={true} message={err} duration={1200} />}
       </IonContent>
     </IonPage>
   );
