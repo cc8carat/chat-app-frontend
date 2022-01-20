@@ -122,6 +122,9 @@ const Chat: React.FC = () => {
 
       <IonContent scrollEvents={true} ref={contentRef}>
         <IonGrid>
+          <IonRow className='ion-justify-content-center'>
+            <div className='welcome-message'>You have checked in at {name}</div>
+          </IonRow>
           {messages &&
             messages.map((message, index) => {
               return (
