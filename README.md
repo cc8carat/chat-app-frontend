@@ -1,3 +1,3 @@
 You can checkout the website here:
-chok-chok.netlify.app
+https://chok-chok.netlify.app/
 
