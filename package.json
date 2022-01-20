@@ -20,6 +20,7 @@
     "@capacitor/storage": "^1.2.3",
     "@ionic/react": "^6.0.0",
     "@ionic/react-router": "^6.0.0",
+    "@capacitor/cli": "3.3.3",
     "axios": "^0.24.0",
     "dayjs": "^1.10.7",
     "ionicons": "^5.4.0",
@@ -47,7 +48,6 @@
     "workbox-streams": "^5.1.4"
   },
   "devDependencies": {
-    "@capacitor/cli": "3.3.3",
     "@ionic/lab": "3.2.10",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
