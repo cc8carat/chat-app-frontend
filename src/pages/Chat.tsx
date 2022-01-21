@@ -115,7 +115,7 @@ const Chat: React.FC = () => {
             <IonBackButton text='' defaultHref='/protected' />
           </IonButtons>
           <IonTitle className='chat-title'>
-            {name}({userCount})
+            ({userCount}){name}
           </IonTitle>
         </IonToolbar>
       </IonHeader>
