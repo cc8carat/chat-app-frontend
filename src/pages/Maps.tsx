@@ -144,12 +144,12 @@ const Maps: React.FC = () => {
               })}
             <Marker width={50} anchor={myPosition} color='#d7a2ff' />
             {showOverlay === true && selectedRoom && overlayType === 'room' && (
-              <Overlay anchor={[selectedRoom.location.coordinates[1], selectedRoom.location.coordinates[0]]} offset={[83, 27]}>
+              <Overlay anchor={[selectedRoom.location.coordinates[1], selectedRoom.location.coordinates[0]]} offset={[72, 16]}>
                 <MapOverlay selectedRoom={selectedRoom} userCount={userCount} overlayType={overlayType} searchText={searchText} />
               </Overlay>
             )}
             {showOverlay === true && selectedPosition && overlayType === 'selectedPosition' && (
-              <Overlay anchor={selectedPosition} offset={[83, 27]}>
+              <Overlay anchor={selectedPosition} offset={[90, 16]}>
                 <MapOverlay
                   selectedRoom={selectedRoom}
                   userCount={userCount}

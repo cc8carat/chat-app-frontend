@@ -1,3 +1,7 @@
+.body {
+  max-width: 700px;
+}
+
 .no-scroll {
   --overflow: hidden;
 }
@@ -8,6 +12,8 @@
 
 .sign-container {
   height: 100vh;
+  max-width: 820px;
+  margin: 0 auto;
 }
 
 .sign h1 {
