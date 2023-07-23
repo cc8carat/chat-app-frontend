@@ -1,9 +1,15 @@
 import { IonButton, IonCard, IonCardSubtitle, IonRow, IonInput } from '@ionic/react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+
 import './MapOverlay.css';
 
 const MapOverlay: React.FC<any> = ({ selectedRoom, overlayType, searchText, handleSelectePositionClick }) => {
   const [text, setText] = useState<string | null>();
+  const inputRef = useRef<HTMLIonInputElement>(null);
+  useEffect(() => {
+    inputRef.current?.focus();
+    inputRef.current?.setFocus();
+  }, []);
 
   return (
     <IonCard className='overlay-card'>
@@ -26,10 +32,9 @@ const MapOverlay: React.FC<any> = ({ selectedRoom, overlayType, searchText, hand
                 onIonChange={(e) => setText(e.detail.value!)}
                 value={text}
                 placeholder={'Spot name'}
+                ref={inputRef}
                 onClick={(e) => {
-                  //const target = e.target as HTMLInputElement;
-                  const target = e.target;
-                  if (target instanceof HTMLInputElement) target.focus();
+                  inputRef.current?.setFocus();
                 }}
               ></IonInput>
             </IonCardSubtitle>
