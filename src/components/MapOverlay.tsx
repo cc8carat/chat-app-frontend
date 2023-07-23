@@ -26,6 +26,11 @@ const MapOverlay: React.FC<any> = ({ selectedRoom, overlayType, searchText, hand
                 onIonChange={(e) => setText(e.detail.value!)}
                 value={text}
                 placeholder={'Spot name'}
+                onClick={(e) => {
+                  //const target = e.target as HTMLInputElement;
+                  const target = e.target;
+                  if (target instanceof HTMLInputElement) target.focus();
+                }}
               ></IonInput>
             </IonCardSubtitle>
           </IonRow>
