@@ -30,12 +30,13 @@ const AuthState: React.FC = ({ children }) => {
   const [token, setAndStoreToken] = useCapStorage();
   const [user, setUser] = useState({ userId: '', userName: '' });
   const [isLoading, setIsLoading] = useState(false);
-  const [err, setErr] = useState<any>();
+  const [err, setErr] = useState('');
 
   useEffect(() => {
     if (token) {
       const autoSignin = async () => {
         setIsLoading(true);
+        setErr('');
         try {
           const {
             data: { _id, name },
@@ -56,6 +57,7 @@ const AuthState: React.FC = ({ children }) => {
   }, [token]);
 
   const signup = async (formData: SignUpForm) => {
+    setErr('');
     try {
       const {
         data: { token },
@@ -68,6 +70,7 @@ const AuthState: React.FC = ({ children }) => {
   };
 
   const signin = async (formData: SignInForm) => {
+    setErr('');
     try {
       const {
         data: { token },
@@ -79,7 +82,11 @@ const AuthState: React.FC = ({ children }) => {
     }
   };
 
-  return <AuthContext.Provider value={{ isAuthenticated, signup, signin, user, isLoading, err }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, signup, signin, user, isLoading, err }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthState;
